@@ -1,17 +1,3 @@
-# You have two classes, BricksFactory and Brick.
-# BricksFactory - should be able to create a given number of bricks, randomly determine the color of each brick,
-# and be able to return the total number of unbroken bricks for all time.
-
-# In addition, BricksFactory should have two methods:
-#- which must return the last 10 created unbroken bricks of the requested color.
-#- which must return a sorted array of unbroken bricks (sorting by color).
-# *If you want, you can try writing logic for the Brick class,
-# where each brick will know which field it should be sorted by.
-
-# A Brick has three properties - color, serial number, and state.
-# Each brick has a 20% chance of being broken when created - so in this case the state field will be set to "broken".
-# The serial number is equal to the total count of all successfully created blocks.
-
 class Brick
   def initialize
     @color
