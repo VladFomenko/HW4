@@ -1,99 +1,74 @@
 class Brick
-  def initialize
-    @color
-    @state
+  def initialize(color:, state:, number:)
+    @color = color
+    @state = state
+    @number = number
   end
 
-  # attr_accessor :hash_size
-  # attr_accessor :color, :serial_number, :state
+  attr_accessor :color, :state, :number
 
-  def get_color
-    @color = %w[red white brown orange gray].shuffle.first
+
+end
+
+# module Arr_sort
+#   def sort_smth_field(field)
+#     @arr_bricks.filter {|i| i if i.state == 'unbroken'}.sort_by { |s| s.field}
+#   end
+#
+# end
+
+class Bricks_factory
+  def initialize(quantity)
+    @quantity = quantity
+    @arr_bricks = []
+    @temporary_var_state
+    @quantity_of_bricks = (1..@quantity).to_a
   end
 
-  def get_serial_number(quantity_of_bricks, state)
-    if state == 'unbroken'
-      quantity_of_bricks[0]
+  #include Arr_sort
+
+
+  def create_bricks
+    (1..@quantity).each {|i| @arr_bricks << Brick.new(color: create_color, state: create_state, number: create_number)}
+    @arr_bricks
+  end
+
+
+  def create_color
+    %w[red white brown orange gray].shuffle.first
+  end
+
+  def create_state
+    result = rand(101)
+    @temporary_var_state = result > 20 ? 'unbroken' : 'broken'
+  end
+
+  def create_number
+    if @temporary_var_state == 'unbroken'
+      @quantity_of_bricks[0]
+      @quantity_of_bricks.shift
     else
       nil
     end
   end
 
-  def get_state
-    res = rand(101)
-    @state = res > 20 ? 'unbroken' : 'broken'
-  end
-
-end
-
-class BricksFactory < Brick
-
-  def initialize(quantity)
-    @arr_quantity = (1..quantity.to_i).to_a
-    @arr_for_number = (1..quantity.to_i).to_a
-    @db_of_bricks = {}
-  end
-
-  def create_bricks_hash
-    @arr_quantity.each do |i|
-      hash_brick = {
-        :color => get_color,
-        :state => get_state,
-        :serial_number => get_serial_number(@arr_for_number, @state),
-      }
-      @db_of_bricks["bricks##{i}"] = hash_brick
-
-      @arr_for_number.shift if @state == 'unbroken'
-    end
-    @db_of_bricks
-  end
-
   def only_unbroken_bricks
-    result = {}
-    create_bricks_hash
-    @db_of_bricks.each_pair do |key, value|
-      if value[:state] == 'unbroken'
-        result[key] = value
-      end
-    end
-    result
+    res = @arr_bricks.filter {|i| i if i.state == 'unbroken'}
+    res.size
   end
 
-  def last_ten_unbroken_bricks(color)
-    result = only_unbroken_bricks if @db_of_bricks == {}
-    arr_hash = result.to_a
-    b = []
-    arr_hash.reverse.map do |i|
-      b << i if i[1][:color] == color
-      break if b.size == 10
+  def bricks_some_color(user_color)
+    @result = []
+    @arr_bricks.reverse.filter do |i|
+      @result << i if i.color == user_color
+      break if @result.size > 9
     end
-    b.reverse.to_h
+    @result.reverse
   end
 
-  def hash_sort_by_color
-    result = only_unbroken_bricks if @db_of_bricks == {}
-    result.to_a.sort_by { |s| s[1][:color]}
+  def sort_by_color
+    #не зміг уникнути повторення коду. Вже існує метод, який видаляє побиті цегли.
+    @arr_bricks.filter {|i| i if i.state == 'unbroken'}.sort_by { |s| s.color}
   end
+
 end
-
-# задам питання укр, бо на англ не зможу.
-#
-# задумка була така, що в Brick ми отримуємо колір, (в моїй реалізації це безглуздо робит ьсаме в цьому класі, а не в фариці)номер і
-# чи розбитий кирпич. Потім ми наслідуємо у BricksFactory від Brick ці методи та властивості(? може це просто змінні),
-# але ж вони не будуть працювати без виклику. Потрібно буде викликати методи створення цих властивостей.
-# Але ж кількість кирпичів задається у BricksFactory, а так як я BricksFactory роблю таким класом, який наслідує
-# то будь-які дані я ж не зможу передати у Brick з BricksFactory?  у такому випадкку => (BricksFactory < Brick) передаються методи та властивості
-# з Brick у BricksFactory?
-#
-# якщо я наслідую класс, а  з ним і методи то навіщо мені потрібні ті властивості(колір, номер та стан), якщо так як я написав
-# вони не будуть працювати без виклику методів.
-#
-# Властивості, це то шо ми можемо виклакати як методи після оголошення класу?(типу a.color)
-# ну наприклад зміні, які зберігають інформацію в середені класу то не властивості?(наприклад просто оголосити в initialize зміну @color)
-# Властивості це те шо ми передаєм під час виклику(a = BricksFactory.new(10) - 10 це ж властивість?) та ті шо оголошуємо сетерами і гетереами?
-#
-# ще питання по initialize, туди потрібно писати тільки ті зміні, що ми  будемо з них робити геттери і сеттери, чи і ті що просто використовувати?
-# ну наприклад. записав туди просто змінну, в якій буду використовувати значення.
-#
-#
-# #
