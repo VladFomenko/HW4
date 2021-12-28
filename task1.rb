@@ -45,7 +45,7 @@ class BricksFactory
     res.size
   end
 
-  def bricks_some_color(user_color)
+  def user_color_bricks(user_color)
     @arr_bricks.reverse.each_with_object([]) do |element, result|
       result << element if element.color == user_color
       break result if result.size == 10
