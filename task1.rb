@@ -17,7 +17,7 @@ end
 
 class BricksFactory
   def initialize
-    @arr_unbroken_bricks = []
+    @arr_bricks = []
   end
 
   def create_color
@@ -35,25 +35,25 @@ class BricksFactory
       temporary_object = Brick.new(create_color, Brick.create_state)
       number += 1 if temporary_object.state == 'unbroken'
       temporary_object.number = create_number(temporary_object.state, number)
-      @arr_unbroken_bricks << temporary_object
+      @arr_bricks << temporary_object
     end
-    @arr_unbroken_bricks
+    @arr_bricks
   end
 
   def only_unbroken_bricks
-    res = @arr_unbroken_bricks.filter { |i| i if i.state == 'unbroken' }
+    res = @arr_bricks.filter { |i| i if i.state == 'unbroken' }
     res.size
   end
 
   def bricks_some_color(user_color)
-    @arr_unbroken_bricks.reverse.each_with_object([]) do |element, result|
+    @arr_bricks.reverse.each_with_object([]) do |element, result|
       result << element if element.color == user_color
       break result if result.size == 10
     end.reverse
   end
 
   def sort_by_color
-    @arr_unbroken_bricks.sort_by { |s| s.color }
+    @arr_bricks.sort_by { |s| s.color }
   end
 
 end
