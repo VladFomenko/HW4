@@ -15,7 +15,36 @@ class Brick
 
 end
 
+module Sorting_by_given_field
+  def sort_by_field(field)
+    arr_errors = []
+    arr_result = []
+    @arr_bricks.each do |i|
+      if field == 'broken'
+        if i.inspect.scan(/\"broken\"/) == []
+          p "does not contain a required field"
+          arr_errors << i
+        else
+          arr_result << i
+        end
+      else
+        if i.inspect.scan(field) == []
+          p "does not contain a required field"
+          arr_errors << i
+        else
+          arr_result << i
+        end
+      end
+    end
+    p arr_errors
+    arr_result.sort_by { field }
+  end
+
+end
+
 class BricksFactory
+
+  include Sorting_by_given_field
   def initialize
     @arr_bricks = []
   end
@@ -56,4 +85,5 @@ class BricksFactory
     @arr_bricks.sort_by { |s| s.color }
   end
 
+  alias user_color_bricks sort_by_field
 end
